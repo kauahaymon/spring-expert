@@ -1,6 +1,7 @@
 package world.haymon.spring_architecture.motadora.api;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,6 +13,7 @@ import world.haymon.spring_architecture.motadora.*;
 public class TesteFabricaController {
 
     @Autowired
+    @Qualifier("motorTurbo") // Name of the bean to Inject
     private Motor motor;
 
     @PostMapping

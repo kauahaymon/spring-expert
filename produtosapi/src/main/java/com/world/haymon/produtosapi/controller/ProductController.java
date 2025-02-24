@@ -4,7 +4,7 @@ import com.world.haymon.produtosapi.model.Product;
 import com.world.haymon.produtosapi.repository.ProductRepository;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Optional;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -41,5 +41,10 @@ public class ProductController {
                        @RequestBody Product product) {
         product.setId(id);
         productRepository.save(product);
+    }
+
+    @GetMapping
+    public List<Product> search(@RequestParam("nome") String name) {
+        return productRepository.findByName(name);
     }
 }

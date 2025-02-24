@@ -1,8 +1,19 @@
 package com.world.haymon.produtosapi.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "produtos")
 public class Product {
+
+    @Id
+    @Column(name = "id")
     private String id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "price")
     private Double price;
 
     public String getId() {

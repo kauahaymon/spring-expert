@@ -13,7 +13,8 @@ import world.haymon.spring_architecture.motadora.*;
 public class TesteFabricaController {
 
     @Autowired
-    @Qualifier("motorTurbo") // Name of the bean to Inject
+    //@Qualifier("motorTurbo") // Name of the bean to Inject
+    @Turbo
     private Motor motor;
 
     @PostMapping

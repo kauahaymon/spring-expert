@@ -2,6 +2,7 @@ package world.haymon.spring_architecture.motadora.configuration;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import world.haymon.spring_architecture.motadora.Motor;
 import world.haymon.spring_architecture.motadora.TipoMotor;
 
@@ -9,6 +10,7 @@ import world.haymon.spring_architecture.motadora.TipoMotor;
 public class MontadoraConfiguration {
 
     @Bean(name = "motorAspirado")
+    @Primary
     public Motor motorAspirado() {
         Motor motor = new Motor();
         motor.setModelo("XPTO-0");

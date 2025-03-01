@@ -1,8 +1,10 @@
 package com.world.haymon.libraryapi.repository;
 
 import com.world.haymon.libraryapi.model.Autor;
+import com.world.haymon.libraryapi.model.GeneroLivro;
 import com.world.haymon.libraryapi.model.Livro;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -32,4 +34,27 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     List<Livro> findByTituloOrIsbn(String titulo, String isbn);
 
     List<Livro> findByDataPublicacaoBetween(LocalDate inicio, LocalDate fim);
+
+    // JPQL --> References the Entities and the Properties
+    // select l.* from livro order by l.titulo, l.preco
+    @Query(" select l from Livro as l order by l.titulo, l.preco ")
+    List<Livro> listarLivrosOrdenadoPorTituloEPreco();
+
+    /**
+     * select a.*
+     * from livro l
+     * join autor a on a.id = l.id_autor;
+     */
+    @Query(" select a from Livro l join l.autor a ")
+    List<Autor> listarAutoresDosLivros();
+
+    @Query("""
+            select l.genero
+            from Livro l
+            join l.autor a
+            where a.nacionalidade = 'Brasileira'
+            order by l.genero
+            """)
+    List<String> listarGeneroAutoresBrasileiros();
+
 }

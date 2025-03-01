@@ -13,7 +13,7 @@ import java.util.UUID;
 @Table(name = "autor", schema = "public")
 @Getter
 @Setter
-@ToString
+@ToString(exclude = "livros")
 public class Autor {
 
     @Id
@@ -31,11 +31,6 @@ public class Autor {
     private String nacionalidade;
 
     // Not a column
-    //@OneToMany(mappedBy = "autor") // One "Autor" to Many "Livros"
-    @Transient
+    @OneToMany(mappedBy = "autor", fetch = FetchType.LAZY) // One "Autor" to Many "Livros"
     private List<Livro> livros;
-
-    @Deprecated
-    public Autor() {
-    }
 }

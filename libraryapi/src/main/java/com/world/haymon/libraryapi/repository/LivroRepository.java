@@ -5,12 +5,16 @@ import com.world.haymon.libraryapi.model.Livro;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
 public interface LivroRepository extends JpaRepository<Livro, UUID> {
 
-    // QUERY METHODS
+    /**
+     *  QUERY METHODS
+     * <a href="https://docs.spring.io/spring-data/jpa/reference/jpa/query-methods.html">JPA Query Methods</a>
+     */
 
     // select * from livro where id_autor = id
     List<Livro> findByAutor(Autor autor);
@@ -26,4 +30,6 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
 
     // select * from livro where titulo = ? or isbn = ?
     List<Livro> findByTituloOrIsbn(String titulo, String isbn);
+
+    List<Livro> findByDataPublicacaoBetween(LocalDate inicio, LocalDate fim);
 }

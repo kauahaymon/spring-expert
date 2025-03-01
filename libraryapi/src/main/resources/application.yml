@@ -10,3 +10,5 @@ spring:
     show-sql: true
     hibernate:
       ddl-auto: update # none, create, create-drop
+    properties:
+      hibernate.format_sql: true

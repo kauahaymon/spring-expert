@@ -4,8 +4,10 @@ import com.world.haymon.libraryapi.model.Autor;
 import com.world.haymon.libraryapi.model.GeneroLivro;
 import com.world.haymon.libraryapi.model.Livro;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -67,4 +69,16 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     // Positional Parameters
     @Query(" select l from Livro l where l.genero = ?1 order by ?2")
     List<Livro> findByGeneroPositionalParam(GeneroLivro generoLivro, String ordem);
+
+    // delete
+    @Modifying
+    @Transactional
+    @Query(" delete from Livro where genero = ?1 ")
+    void deletarPorGenero(GeneroLivro generoLivro);
+
+    // update
+    @Modifying
+    @Transactional
+    @Query(" update Livro set preco = ?1 where id = ?2 ")
+    void updatePreco(BigDecimal newPreco, UUID livroId);
 }

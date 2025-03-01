@@ -5,6 +5,7 @@ import com.world.haymon.libraryapi.model.GeneroLivro;
 import com.world.haymon.libraryapi.model.Livro;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -57,4 +58,13 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
             """)
     List<String> listarGeneroAutoresBrasileiros();
 
+    // Named Parameters
+    @Query(" select l from Livro l where l.genero = :nomeGenero order by :paramOrdenacao")
+    List<Livro> findByGeneroNamedParam(
+            @Param("nomeGenero") GeneroLivro generoLivro,
+            @Param("paramOrdenacao") String ordem);
+
+    // Positional Parameters
+    @Query(" select l from Livro l where l.genero = ?1 order by ?2")
+    List<Livro> findByGeneroPositionalParam(GeneroLivro generoLivro, String ordem);
 }

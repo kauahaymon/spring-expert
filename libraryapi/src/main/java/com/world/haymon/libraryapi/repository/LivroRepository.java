@@ -81,4 +81,6 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     @Transactional
     @Query(" update Livro set preco = ?1 where id = ?2 ")
     void updatePreco(BigDecimal newPreco, UUID livroId);
+
+    boolean existsByAutor(Autor autor);
 }

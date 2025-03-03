@@ -6,6 +6,7 @@ import com.world.haymon.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import com.world.haymon.libraryapi.exceptions.RegistroDuplicadoException;
 import com.world.haymon.libraryapi.model.Autor;
 import com.world.haymon.libraryapi.service.AutorService;
+import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -18,13 +19,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/autores") /// http://localhost:8080/autores
+@RequiredArgsConstructor
 public class AutorController {
 
     private final AutorService service;
-
-    public AutorController(AutorService service) {
-        this.service = service;
-    }
 
     @PostMapping
     public ResponseEntity<?> salvar(@RequestBody AutorDTO autorDTO) {

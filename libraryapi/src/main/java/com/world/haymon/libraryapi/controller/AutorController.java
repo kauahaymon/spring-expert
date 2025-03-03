@@ -3,6 +3,7 @@ package com.world.haymon.libraryapi.controller;
 import com.world.haymon.libraryapi.controller.dto.AutorDTO;
 import com.world.haymon.libraryapi.model.Autor;
 import com.world.haymon.libraryapi.service.AutorService;
+import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -85,5 +86,25 @@ public class AutorController {
                 .toList();
 
         return ResponseEntity.ok(autorDTOS);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> atualizar(@PathVariable String id, @RequestBody AutorDTO dto) {
+        var idAutor = UUID.fromString(id);
+        Optional<Autor> autorOptional = service.obterPorId(idAutor);
+
+        if (autorOptional.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        Autor autor = autorOptional.get();
+
+        autor.setNome(dto.nome());
+        autor.setDataNascimento(dto.dataNascimento());
+        autor.setNacionalidade(dto.nacionalidade());
+
+        service.atualizar(autor);
+
+        return ResponseEntity.noContent().build();
     }
 }

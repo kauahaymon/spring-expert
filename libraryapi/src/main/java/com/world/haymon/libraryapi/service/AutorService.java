@@ -21,6 +21,13 @@ public class AutorService {
         return repository.save(autor);
     }
 
+    public void atualizar(Autor autor) {
+        if (autor.getId() == null) throw new IllegalArgumentException(
+                "Não é possível atualizar Autor inexistente!"
+        );
+        repository.save(autor);
+    }
+
     public Optional<Autor> obterPorId(UUID id) {
         return repository.findById(id);
     }

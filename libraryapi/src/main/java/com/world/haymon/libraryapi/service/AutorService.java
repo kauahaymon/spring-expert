@@ -6,6 +6,8 @@ import com.world.haymon.libraryapi.repository.AutorRepository;
 import com.world.haymon.libraryapi.repository.LivroRepository;
 import com.world.haymon.libraryapi.validator.AutorValidator;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -51,6 +53,22 @@ public class AutorService {
         if (nome != null) return repository.findByNome(nome);
         if (nacionalidade != null) return repository.findByNacionalidade(nacionalidade);
         return repository.findAll();
+    }
+
+    public List<Autor> filtrarPorExample(String nome, String nacionalidade) {
+        Autor autor = new Autor();
+        autor.setNome(nome);
+        autor.setNacionalidade(nacionalidade);
+
+        ExampleMatcher matcher = ExampleMatcher
+                .matching()
+                .withIgnorePaths("id", "dataCadastro", "dataNascimento")
+                .withIgnoreNullValues() /// Ignores Null Values
+                .withIgnoreCase() /// Ignores String Cases
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING); /// Contains Any String Related
+        Example<Autor> autorExample = Example.of(autor, matcher);
+
+        return repository.findAll(autorExample);
     }
 
     private boolean possuiLivro(Autor autor) {

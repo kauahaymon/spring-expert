@@ -6,6 +6,7 @@ import com.world.haymon.libraryapi.exceptions.OperacaoNaoPermitidaException;
 import com.world.haymon.libraryapi.exceptions.RegistroDuplicadoException;
 import com.world.haymon.libraryapi.model.Autor;
 import com.world.haymon.libraryapi.service.AutorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +26,7 @@ public class AutorController {
     private final AutorService service;
 
     @PostMapping
-    public ResponseEntity<?> salvar(@RequestBody AutorDTO autorDTO) {
+    public ResponseEntity<?> salvar(@RequestBody @Valid AutorDTO autorDTO) {
         try {
             Autor autorEntidade = autorDTO.mapearParaEntidade();
             service.salvar(autorEntidade);

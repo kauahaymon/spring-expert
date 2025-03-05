@@ -7,9 +7,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.swing.text.html.Option;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @SpringBootTest
@@ -31,7 +33,7 @@ class LivroRepositoryTest {
         livro.setDataPublicacao(LocalDate.of(1989, 8, 23));
         livro.setGenero(GeneroLivro.CIENCIA);
 
-        var idAutor = UUID.fromString("18bed589-6bf1-4286-9b76-126d7628c328");
+        var idAutor = UUID.fromString("2827f981-3914-4975-a554-71c5b5011ad7");
         Autor autor = autorRepository.findById(idAutor).orElse(null);
         livro.setAutor(autor);
 
@@ -116,8 +118,8 @@ class LivroRepositoryTest {
 
     @Test
     void pesquisarPorIsbn() {
-        List<Livro> livrosLista = repository.findByIsbn("9hj29-98g84");
-        livrosLista.forEach(System.out::println);
+        Optional<Livro> livrosLista = repository.findByIsbn("9hj29-98g84");
+        livrosLista.ifPresent(System.out::println);
     }
 
     @Test

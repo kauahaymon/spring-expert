@@ -3,18 +3,22 @@ package com.world.haymon.libraryapi.repository;
 import com.world.haymon.libraryapi.model.Autor;
 import com.world.haymon.libraryapi.model.GeneroLivro;
 import com.world.haymon.libraryapi.model.Livro;
+import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-public interface LivroRepository extends JpaRepository<Livro, UUID> {
+public interface LivroRepository extends JpaRepository<Livro, UUID>, JpaSpecificationExecutor<Livro> {
 
     /**
      *  QUERY METHODS
@@ -28,7 +32,7 @@ public interface LivroRepository extends JpaRepository<Livro, UUID> {
     List<Livro> findByTitulo(String titulo);
 
     // select * from livro where isbn = ?
-    List<Livro> findByIsbn(String isbn);
+    Optional<Livro> findByIsbn(String isbn);
 
     // select * from livro where titulo = ? and preco = ?
     List<Livro> findByTituloAndPreco(String titulo, BigDecimal preco);

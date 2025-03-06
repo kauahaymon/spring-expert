@@ -2,6 +2,7 @@ package com.world.haymon.libraryapi.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,15 +19,19 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity htpp) throws Exception {
-        return htpp
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(config -> {
-                    config.loginPage("/login").permitAll();
+                    config.loginPage("/login");
                 })
-                //.httpBasic(Customizer.withDefaults()) // to postman auth
+                .httpBasic(Customizer.withDefaults()) // to postman auth
                 .authorizeHttpRequests(authorize -> {
-                    authorize.anyRequest().authenticated();
+                    authorize.requestMatchers("/login/**").permitAll();
+                    authorize.requestMatchers("/autores/**").hasRole("ADMIN");
+                    authorize.requestMatchers("/livros/**").hasAnyRole("ADMIN", "USER");
+
+                    authorize.anyRequest().authenticated(); // end
                 })
                 .build();
     }

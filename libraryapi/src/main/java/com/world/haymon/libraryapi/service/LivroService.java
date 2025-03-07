@@ -2,7 +2,9 @@ package com.world.haymon.libraryapi.service;
 
 import com.world.haymon.libraryapi.model.GeneroLivro;
 import com.world.haymon.libraryapi.model.Livro;
+import com.world.haymon.libraryapi.model.Usuario;
 import com.world.haymon.libraryapi.repository.LivroRepository;
+import com.world.haymon.libraryapi.security.SecurityService;
 import com.world.haymon.libraryapi.validator.LivroValidator;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.boot.model.naming.IllegalIdentifierException;
@@ -24,9 +26,12 @@ public class LivroService {
 
     private final LivroRepository repository;
     private final LivroValidator validator;
+    private final SecurityService securityService;
 
     public Livro salvar(Livro livro) {
         validator.validar(livro);
+        Usuario usuario = securityService.obterUsuarioLogado();
+        livro.setUsuario(usuario);
         return repository.save(livro);
     }
 

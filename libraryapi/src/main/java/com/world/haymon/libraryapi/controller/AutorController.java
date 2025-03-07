@@ -1,18 +1,18 @@
 package com.world.haymon.libraryapi.controller;
 
 import com.world.haymon.libraryapi.controller.dto.AutorDTO;
-import com.world.haymon.libraryapi.controller.dto.ErroResposta;
 import com.world.haymon.libraryapi.controller.mappers.AutorMapper;
-import com.world.haymon.libraryapi.exceptions.OperacaoNaoPermitidaException;
-import com.world.haymon.libraryapi.exceptions.RegistroDuplicadoException;
 import com.world.haymon.libraryapi.model.Autor;
+import com.world.haymon.libraryapi.model.Usuario;
 import com.world.haymon.libraryapi.service.AutorService;
+import com.world.haymon.libraryapi.service.UsuarioService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
@@ -26,20 +26,23 @@ import java.util.UUID;
 public class AutorController implements GenericController {
 
     private final AutorService service;
+    private final UsuarioService usuarioService;
     private final AutorMapper mapper;
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('GERENTE')")
     public ResponseEntity<Void> salvar(@RequestBody @Valid AutorDTO dto) {
-            Autor autor = mapper.toEntity(dto);
-            service.salvar(autor);
+        Autor autor = mapper.toEntity(dto);
+        service.salvar(autor);
 
-            /// http://localhost:8080/autores/dc02abe9-74e2-417b-849d-edc6828d4544
-            URI location = gerarHeaderLocation(autor.getId());
+        /// http://localhost:8080/autores/dc02abe9-74e2-417b-849d-edc6828d4544
+        URI location = gerarHeaderLocation(autor.getId());
 
-            return ResponseEntity.created(location).build();
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<AutorDTO> obterDetalhes(@PathVariable("id") String id) {
         var idAutor = UUID.fromString(id);
         Optional<Autor> autorOptional = service.obterPorId(idAutor);
@@ -52,6 +55,7 @@ public class AutorController implements GenericController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('GERENTE')")
     public ResponseEntity<Void> deletar(@PathVariable("id") String id) {
 
         var idAutor = UUID.fromString(id);
@@ -67,6 +71,7 @@ public class AutorController implements GenericController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('OPERADOR', 'GERENTE')")
     public ResponseEntity<List<AutorDTO>> pesquisar(
             @RequestParam(value = "nome", required = false) String nome,
             @RequestParam(value = "nacionalidade", required = false) String nacionalidade) {
@@ -81,6 +86,7 @@ public class AutorController implements GenericController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('GERENTE')")
     public ResponseEntity<Void> atualizar(@PathVariable String id, @RequestBody @Valid AutorDTO dto) {
         var idAutor = UUID.fromString(id);
         Optional<Autor> autorOptional = service.obterPorId(idAutor);

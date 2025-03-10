@@ -29,10 +29,9 @@ public class SecurityConfiguration {
     public SecurityFilterChain securityFilterChain(HttpSecurity http, LoginSocialSuccessHandler successHandler) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
-//                .formLogin(config -> {
-//                    config.loginPage("/login");
-//                })
-                .formLogin(Customizer.withDefaults())
+                .formLogin(config -> {
+                    config.loginPage("/login");
+                })
                 .httpBasic(Customizer.withDefaults()) // to postman auth
                 .authorizeHttpRequests(authorize -> {
                     authorize.requestMatchers("/login/**").permitAll();
@@ -41,7 +40,9 @@ public class SecurityConfiguration {
                     authorize.anyRequest().authenticated(); // end
                 })
                 .oauth2Login(oauth2 -> {
-                    oauth2.successHandler(successHandler);
+                    oauth2
+                            .loginPage("/login")
+                            .successHandler(successHandler);
                 })
                 .build();
     }

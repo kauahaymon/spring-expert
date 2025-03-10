@@ -47,7 +47,7 @@ public class SecurityConfiguration {
         return new BCryptPasswordEncoder(10); // generate different hash when encoding
     }
 
-    @Bean
+    //@Bean
     public UserDetailsService userDetailsService(PasswordEncoder encoder, UsuarioService usuarioService) {
 
         UserDetails user = User.builder()

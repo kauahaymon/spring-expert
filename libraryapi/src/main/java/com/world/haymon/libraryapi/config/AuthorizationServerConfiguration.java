@@ -49,4 +49,33 @@ public class AuthorizationServerConfiguration {
                 .requireAuthorizationConsent(false)
                 .build();
     }
+
+    @Bean
+    public JWKSource<SecurityContext> jwkSource() throws Exception {
+        RSAKey rsaKey = gerarChaveRSA();
+        JWKSet jwkSet = new JWKSet(rsaKey);
+
+        return new ImmutableJWKSet<>(jwkSet);
+    }
+
+    private RSAKey gerarChaveRSA() throws Exception {
+        KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+        keyPairGenerator.initialize(2048);
+
+        KeyPair keyPair = keyPairGenerator.generateKeyPair();
+
+        RSAPublicKey chavePublica = (RSAPublicKey) keyPair.getPublic();
+        RSAPrivateKey chavePrivada = (RSAPrivateKey) keyPair.getPrivate();
+
+        return new RSAKey
+                .Builder(chavePublica)
+                .privateKey(chavePrivada)
+                .keyID(UUID.randomUUID().toString())
+                .build();
+    }
+
+    @Bean
+    public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
+        return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
+    }
 }

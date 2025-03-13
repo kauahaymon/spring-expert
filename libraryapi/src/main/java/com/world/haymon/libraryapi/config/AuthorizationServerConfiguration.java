@@ -98,4 +98,30 @@ public class AuthorizationServerConfiguration {
     public JwtDecoder jwtDecoder(JWKSource<SecurityContext> jwkSource) {
         return OAuth2AuthorizationServerConfiguration.jwtDecoder(jwkSource);
     }
+
+    @Bean
+    public AuthorizationServerSettings authorizationServerSettings() {
+        return AuthorizationServerSettings.builder()
+                // get the token
+                .tokenEndpoint("/oauth2/token")
+
+                // to consult token data
+                .tokenIntrospectionEndpoint("/oauth2/introspect")
+
+                // revoke
+                .tokenRevocationEndpoint("/oauth2/revoke")
+
+                // endpoint to authorize
+                .authorizationEndpoint("/oauth2/authorize")
+
+                // get user info OPEN ID CONNECT
+                .oidcUserInfoEndpoint("/oauth2/userinfo")
+
+                // get public key to verify token assignment
+                .jwkSetEndpoint("/oauth2/jwks")
+                // logout
+                .oidcLogoutEndpoint("/oauth2/logout")
+
+                .build();
+    }
 }

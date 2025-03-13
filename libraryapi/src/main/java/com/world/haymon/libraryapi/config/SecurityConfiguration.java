@@ -1,6 +1,7 @@
 package com.world.haymon.libraryapi.config;
 
 import com.world.haymon.libraryapi.security.CustomUserDetailsService;
+import com.world.haymon.libraryapi.security.JwtCustomAuthenticationFilter;
 import com.world.haymon.libraryapi.security.LoginSocialSuccessHandler;
 import com.world.haymon.libraryapi.service.UsuarioService;
 import org.springframework.context.annotation.Bean;
@@ -19,6 +20,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
+import org.springframework.security.oauth2.server.resource.web.authentication.BearerTokenAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -27,7 +29,11 @@ import org.springframework.security.web.SecurityFilterChain;
 public class SecurityConfiguration {
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http, LoginSocialSuccessHandler successHandler) throws Exception {
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            LoginSocialSuccessHandler successHandler,
+            JwtCustomAuthenticationFilter jwtCustomAuthenticationFilter) throws Exception {
+
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .formLogin(config -> {
@@ -46,6 +52,7 @@ public class SecurityConfiguration {
                             .successHandler(successHandler);
                 })
                 .oauth2ResourceServer(rs -> rs.jwt(Customizer.withDefaults()))
+                .addFilterAfter(jwtCustomAuthenticationFilter, BearerTokenAuthenticationFilter.class)
                 .build();
     }
 

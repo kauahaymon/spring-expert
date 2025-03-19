@@ -2,6 +2,7 @@ package com.world.haymon.libraryapi.config;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -10,6 +11,7 @@ import org.springframework.jdbc.datasource.DriverManagerDataSource;
 import javax.sql.DataSource;
 
 @Configuration
+@Slf4j
 public class DatasourceConfiguration {
 
     @Value("${spring.datasource.url}")
@@ -38,6 +40,8 @@ public class DatasourceConfiguration {
     // Connection Pool with Hikari
     @Bean
     public DataSource hikariDataSource() {
+        log.info("Iniciando conexão com o banco na URL: {}", url);
+
         HikariConfig config = new HikariConfig();
         config.setJdbcUrl(url);
         config.setUsername(username);
